@@ -8,8 +8,6 @@ import pkg, { verifyCredential, normalizeCredential, validateCredentialPayload }
 const { createVerifiableCredentialJwt, createVerifiablePresentationJwt, verifyPresentation } = pkg;
 import bip39 from 'bip39'
 import { createRequire } from 'module';
-import {hashAttributes} from './hashAttributes.js'
-import {verifyAttributes} from './verifyAttributes.js'
 
 const require = createRequire(import.meta.url);
 const hdkey = require('ethereumjs-wallet/hdkey')

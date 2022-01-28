@@ -8,8 +8,7 @@ import pkg, { verifyCredential, normalizeCredential, validateCredentialPayload }
 const { createVerifiableCredentialJwt, createVerifiablePresentationJwt, verifyPresentation } = pkg;
 import bip39 from 'bip39'
 import { createRequire } from 'module';
-import {hashAttributes} from './hashAttributes.js'
-import {verifyAttributes} from './verifyAttributes.js'
+
 
 const require = createRequire(import.meta.url);
 const hdkey = require('ethereumjs-wallet/hdkey')
@@ -113,7 +112,7 @@ for (let i = 1; i < 11; i++) {
 		let res=0.0;
 		let jwtSize=0;
 		console.log(Math.pow(2, i));
-		for (let j = 0; j <10000; j++) {
+		for (let j = 0; j <500; j++) {
 			let start = performance.now();
 				const VCPayload = createVCPayload(PaoloMori,Math.pow(2, i));
 				const jwt = await createVerifiableCredentialJwt(VCPayload, {did:uni.did,signer:uniSigner}, options);
@@ -124,7 +123,7 @@ for (let i = 1; i < 11; i++) {
   		    jwtSize = jwtSize + memorySizeOf(jwt);
   		    //console.log(signedVC.time);
   		}
-  		vcCreationTimes.push([res/10000,jwtSize/10000]);
+  		vcCreationTimes.push([res/500,jwtSize/500]);
   	}
 	
 	console.log(vcCreationTimes);

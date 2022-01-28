@@ -131,7 +131,7 @@ const test = async (accounts) => {
 		const VCPayload = createVCPayload(PaoloMori,Math.pow(2, i),"sha3");
 		const jwt = await createVerifiableCredentialJwt(VCPayload, uni, options);
 		
-		for (let j = 0; j <10000; j++) {
+		for (let j = 0; j <500; j++) {
 			
 			let start = performance.now();
 			     const VPPayload=createVPPayload(jwt,Math.pow(2, i));
@@ -142,7 +142,7 @@ const test = async (accounts) => {
   		    res = res + createVCtime;
   		    jwtSize = jwtSize + memorySizeOf(jwtP);
   		}
-  		vcCreationTimes.push([res/10000,jwtSize/10000]);
+  		vcCreationTimes.push([res/500,jwtSize/500]);
   	}
 	
 	console.log(vcCreationTimes);
