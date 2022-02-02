@@ -1,11 +1,28 @@
+import process from 'process';
 import { createRequire } from 'module';
 import { Keccak } from 'sha3';
 
 
 const require = createRequire(import.meta.url);
+const util = require('util');
 
+let crypto;
+
+ try {
+ 	crypto = require('crypto');
+ 	let h = await crypto.getHashes();
+ 	console.log("Available hash algorithms..");
+ 	console.log(h);
+ }catch (err){
+ 	console.log('crypto support is disabled');
+ 	process.exit();
+ }
+
+
+ 
 const md5 = require('md5');
-const hashKeccak = new Keccak(256);
+const hashKeccak = new Keccak(512);
+const generateKey = util.promisify(crypto.generateKey);
 // function to generate nonce string for hashing
 /*
   Generate a random string of a given length.
@@ -51,7 +68,7 @@ const randomString = (length, kind) => {
   // in order to implement the possibility of selective disclosure
 	// the issuer provides the VC with hashed values of all the claims
 	// for each claim the issuer uses a different nonce during hashing
-export const hashAttributes = (attribute, nonce = undefined ,type ="md5") => {
+/**export const hashAttributes = (attribute, nonce = undefined ,type ="md5") => {
 	if(!nonce)
        nonce = randomString(8,'#aA');
   if(type=="md5"){
@@ -69,4 +86,20 @@ export const hashAttributes = (attribute, nonce = undefined ,type ="md5") => {
     const result = hashKeccak.digest('base64');
     return { nonce: nonce, res: result};
   }
+}*/
+
+
+  // in order to implement the possibility of selective disclosure
+	// the issuer provides the VC with hashed values of all the claims
+	// for each claim the issuer uses a different nonce during hashing
+export const hashAttributes = async (attribute, key = undefined ,type ="md5") => {
+	if(!key){
+       key = await generateKey('hmac',{length:256});
+	   key = key.export().toString('hex');
+	}
+   	const hmac = await crypto.createHmac(type,key);
+   	hmac.update(attribute);
+   	const result = await hmac.digest('hex');
+    return { nonce: key, res: result};
 }
+

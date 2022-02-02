@@ -39,9 +39,10 @@ The signature algorithms supported by this project to sign and verify credential
 * ES256K-R: ECDSA over secp256k1 with encoded recovery bit and EcdsaSecp256k1RecoveryMethod2020 as verification method
 * EdDSA: EdDSA signature scheme using SHA-512, Curve25519, and Ed25519VerificationKey2018 as verification algorithm
 
-Tha hash functions used in this project are:
-* MD5
-* Keccak
+Tha supported hash functions depends on available digest algorithms of the OpenSSL:
+ ```sh
+   openssl list -digest-algorithms
+   ```
 
 ### Prerequisites
 

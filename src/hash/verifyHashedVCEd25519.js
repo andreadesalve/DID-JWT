@@ -34,7 +34,7 @@ const getTrufflePrivateKey = (mnemonic, index) => {
 	}).catch(error => console.log('getTrufflePrivateKey ERROR : ' + error));
 }
 
-function createVCPayload(user,nClaims,hashType) {
+async function createVCPayload(user,nClaims,hashType) {
 	const VCPayload={};
 	//VCPayload['sub']=user.did;
     //VCPayload['nbf']=626105238;
@@ -46,7 +46,7 @@ function createVCPayload(user,nClaims,hashType) {
 	for (let i = 0; i < nClaims; i++) {
 		var attrName="attrName"+i;
 		var attrValue="attrValue"+i;
-  		const hashedAttr = hashAttributes(attrValue,undefined,hashType);
+  		const hashedAttr = await hashAttributes(attrValue,undefined,hashType);
   		VCPayload['vc']['credentialSubject'][attrName] = hashedAttr.res;
 	} 
 	return VCPayload;
@@ -115,7 +115,7 @@ const options = {
 		let res=0.0;
 		let jwtSize=0;
 		console.log(Math.pow(2, i));
-		const VCPayload = createVCPayload(PaoloMori,Math.pow(2, i),"md5");
+		const VCPayload = await createVCPayload(PaoloMori,Math.pow(2, i),"md5");
 		const jwt = await createVerifiableCredentialJwt(VCPayload,  {did:uni.did,signer:uniSigner}, options);
 		for (let j = 0; j <500; j++) {
 			let start = performance.now();

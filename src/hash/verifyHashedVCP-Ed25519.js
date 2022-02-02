@@ -34,7 +34,7 @@ const getTrufflePrivateKey = (mnemonic, index) => {
 	}).catch(error => console.log('getTrufflePrivateKey ERROR : ' + error));
 }
 
-function createVCPayload(user,nClaims,hashType) {
+async function createVCPayload(user,nClaims,hashType) {
 	const VCPayload={};
 	//VCPayload['sub']=user.did;
     //VCPayload['nbf']=626105238;
@@ -46,7 +46,7 @@ function createVCPayload(user,nClaims,hashType) {
 	for (let i = 0; i < nClaims; i++) {
 		var attrName="attrName"+i;
 		var attrValue="attrValue"+i;
-  		const hashedAttr = hashAttributes(attrValue,undefined,hashType);
+  		const hashedAttr = await hashAttributes(attrValue,undefined,hashType);
   		disclosure.set(attrName,{path : [attrName],clearValue : attrValue,nonce : hashedAttr.nonce});
   		VCPayload['vc']['credentialSubject'][attrName] = hashedAttr.res;
 	} 
@@ -140,7 +140,7 @@ const test = async (accounts) => {
 		disclosure.clear();
 		console.log(Math.pow(2, i));
 		let nCl=Math.pow(2, i);
-		const VCPayload = createVCPayload(PaoloMori,Math.pow(2, i),"sha3");
+		const VCPayload = await createVCPayload(PaoloMori,Math.pow(2, i),"md5");
 		const jwt = await createVerifiableCredentialJwt(VCPayload, {did:uni.did,signer:uniSigner}, options);
 		const VPPayload=createVPPayload(jwt,nCl);
 		//console.log(VPPayload);
@@ -151,7 +151,7 @@ const test = async (accounts) => {
 				//console.log(verifiedPresentation);
 				let unverifiedVCs = verifiedPresentation.verifiablePresentation.verifiableCredential;
 				const verifiedVP = verifiedPresentation.verifiablePresentation;
-				const disclosedAttributeVerification = verifyAttributes(unverifiedVCs, verifiedVP,"sha3");
+				const disclosedAttributeVerification = await verifyAttributes(unverifiedVCs, verifiedVP,"md5");
 			let end = performance.now();
 			const createVCtime = (end-start);
   		    //const signedVC = await createVCPerformance(VCPayload, uni, options);
