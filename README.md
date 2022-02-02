@@ -68,7 +68,7 @@ The steps below are necessary to install and setting up the experiments.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Run scripts by using node
+Configure the execution of the program using https://github.com/andreadesalve/DID-JWT/blob/main/src/config.json and run the scripts by using node
    ```sh
    node /path/to/script
    ```
