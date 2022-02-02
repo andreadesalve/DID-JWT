@@ -1,0 +1,10 @@
+{
+	"original":{
+
+		},
+	"hash":{
+		"H":"sha3-512",
+		"keylength": 1024,
+		"iterations" : 500
+	}
+}

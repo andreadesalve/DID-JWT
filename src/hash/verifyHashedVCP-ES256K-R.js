@@ -12,6 +12,7 @@ import {hashAttributes} from './hashAttributes.js'
 import {verifyAttributes} from './verifyAttributes.js'
 
 const require = createRequire(import.meta.url);
+const config = require('../config.json');
 const hdkey = require('ethereumjs-wallet/hdkey')
 const didJWT = require('did-jwt');
 //import wallet from 'ethereumjs-wallet'
@@ -34,7 +35,7 @@ const getTrufflePrivateKey = (mnemonic, index) => {
 	}).catch(error => console.log('getTrufflePrivateKey ERROR : ' + error));
 }
 
-async function createVCPayload(user,nClaims,hashType) {
+async function createVCPayload(user,nClaims) {
 	const VCPayload={};
 	//VCPayload['sub']=user.did;
     //VCPayload['nbf']=626105238;
@@ -46,7 +47,7 @@ async function createVCPayload(user,nClaims,hashType) {
 	for (let i = 0; i < nClaims; i++) {
 		var attrName="attrName"+i;
 		var attrValue="attrValue"+i;
-  		const hashedAttr = await hashAttributes(attrValue,undefined,hashType);
+  		const hashedAttr = await hashAttributes(attrValue,undefined,undefined,undefined);
   		disclosure.set(attrName,{path : [attrName],clearValue : attrValue,nonce : hashedAttr.nonce});
   		VCPayload['vc']['credentialSubject'][attrName] = hashedAttr.res;
 	} 
@@ -135,24 +136,24 @@ const test = async (accounts) => {
 		disclosure.clear();
 		console.log(Math.pow(2, i));
 		let nCl=Math.pow(2, i);
-		const VCPayload = await createVCPayload(PaoloMori,Math.pow(2, i),"md5");
+		const VCPayload = await createVCPayload(PaoloMori,Math.pow(2, i));
 		const jwt = await createVerifiableCredentialJwt(VCPayload, uni, options);
 		const VPPayload=createVPPayload(jwt,nCl);
 		//console.log(VPPayload);
 		jwtP=await createVerifiablePresentationJwt(VPPayload,PaoloMori,options);
-		for (let j = 0; j <500; j++) {
+		for (let j = 0; j <config.hash.iterations; j++) {
 			let start = performance.now();
 				const verifiedPresentation= await verifyPresentation(jwtP, didResolver,{});
 				//console.log(verifiedPresentation);
 				let unverifiedVCs = verifiedPresentation.verifiablePresentation.verifiableCredential;
 				const verifiedVP = verifiedPresentation.verifiablePresentation;
-				const disclosedAttributeVerification = await verifyAttributes(unverifiedVCs, verifiedVP,"md5");
+				const disclosedAttributeVerification = await verifyAttributes(unverifiedVCs, verifiedVP);
 			let end = performance.now();
 			const createVCtime = (end-start);
   		    //const signedVC = await createVCPerformance(VCPayload, uni, options);
   		    res = res + createVCtime;
   		}
-  		vcCreationTimes.push([res/500]);
+  		vcCreationTimes.push([res/config.hash.iterations]);
   	}
 	
 	console.log(vcCreationTimes);

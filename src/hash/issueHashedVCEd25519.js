@@ -11,7 +11,9 @@ import { createRequire } from 'module';
 import {hashAttributes} from './hashAttributes.js'
 import {verifyAttributes} from './verifyAttributes.js'
 
+
 const require = createRequire(import.meta.url);
+var config =require('../config.json');
 const hdkey = require('ethereumjs-wallet/hdkey')
 const didJWT = require('did-jwt');
 //import wallet from 'ethereumjs-wallet'
@@ -34,7 +36,7 @@ const getTrufflePrivateKey = (mnemonic, index) => {
 	}).catch(error => console.log('getTrufflePrivateKey ERROR : ' + error));
 }
 
-async function createVCPayload(user,nClaims,hashType) {
+async function createVCPayload(user,nClaims) {
 	const VCPayload={};
 	//VCPayload['sub']=user.did;
     //VCPayload['nbf']=626105238;
@@ -46,7 +48,7 @@ async function createVCPayload(user,nClaims,hashType) {
 	for (let i = 0; i < nClaims; i++) {
 		var attrName="attrName"+i;
 		var attrValue="attrValue"+i;
-		const hashedAttr = await hashAttributes(attrValue,undefined,hashType);
+		const hashedAttr = await hashAttributes(attrValue,undefined,undefined,undefined);
   		VCPayload['vc']['credentialSubject'][attrName] = hashedAttr.res;
 	} 
 	return VCPayload;
@@ -114,9 +116,9 @@ for (let i = 1; i < 11; i++) {
 		let res=0.0;
 		let jwtSize=0;
 		console.log(Math.pow(2, i));
-		for (let j = 0; j <500; j++) {
+		for (let j = 0; j <config.hash.iterations; j++) {
 			let start = performance.now();
-				const VCPayload = await createVCPayload(PaoloMori,Math.pow(2, i),"md5");
+				const VCPayload = await createVCPayload(PaoloMori,Math.pow(2, i));
 				const jwt = await createVerifiableCredentialJwt(VCPayload, {did:uni.did,signer:uniSigner}, options);
 			let end = performance.now();
 			const createVCtime = (end-start);
@@ -125,7 +127,7 @@ for (let i = 1; i < 11; i++) {
   		    jwtSize = jwtSize + memorySizeOf(jwt);
   		    //console.log(signedVC.time);
   		}
-  		vcCreationTimes.push([res/500,jwtSize/500]);
+  		vcCreationTimes.push([res/config.hash.iterations,jwtSize/config.hash.iterations]);
   	}
 	
 	console.log(vcCreationTimes);

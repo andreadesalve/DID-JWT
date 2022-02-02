@@ -1,6 +1,7 @@
 import {hashAttributes} from './hashAttributes.js'
 
-export const verifyAttributes = async (VCs,VP,hashType) => {
+
+export const verifyAttributes = async (VCs,VP) => {
     //console.log("verifyAttributes");
     //console.log(VCs);
     //console.log(VP);
@@ -15,7 +16,7 @@ export const verifyAttributes = async (VCs,VP,hashType) => {
                 var propertyPath = element.path.join('->');
                 if (propToVerify) {
                     //console.log('===SELECTIVE DISCLOSURE=== Verifying attribute : ' + propertyPath + " with value : " + propToVerify);
-                    const rehashedAttribute = await hashAttributes(element.clearValue, element.nonce,hashType);
+                    const rehashedAttribute = await hashAttributes(element.clearValue, element.nonce,undefined,undefined);
                     //console.log('===SELECTIVE DISCLOSURE=== Recalculated hash is : ' + rehashedAttribute.res);
                     if(rehashedAttribute.res === propToVerify)
                         verified ++ ;
