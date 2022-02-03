@@ -48,10 +48,7 @@ async function createVCPayload(user,nClaims) {
 		var attrName="attrName"+i;
 		var attrValue="attrValue"+i;
   		const hashedAttr = await hashAttributes(attrValue,undefined,undefined,undefined);
-  		disclosure[attrName]={
-		path : [attrName],
-		clearValue : attrValue,
-		nonce : hashedAttr.nonce}
+  		disclosure.set(attrName,{path : [attrName],clearValue : attrValue,nonce : hashedAttr.nonce});
   		VCPayload['vc']['credentialSubject'][attrName] = hashedAttr.res;
 	} 
 	return VCPayload;

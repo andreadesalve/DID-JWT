@@ -32,6 +32,8 @@ export const hashAttributes = async (attribute, key = undefined, keylength = con
        key = await generateKey('hmac',{length:keylength});
 	   key = key.export().toString('hex');
 	}
+	//console.log("Key  "+key);
+	
    	const hmac = await crypto.createHmac(type,key);
    	hmac.update(attribute);
    	const result = await hmac.digest('hex');
