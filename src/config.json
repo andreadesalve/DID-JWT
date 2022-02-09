@@ -6,5 +6,8 @@
 		"H":"sha3-512",
 		"keylength": 512,
 		"iterations" : 500
+	},
+	"atomic":{
+		"iterations" : 500
 	}
 }
