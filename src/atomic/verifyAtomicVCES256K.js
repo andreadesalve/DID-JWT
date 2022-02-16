@@ -124,7 +124,7 @@ const test = async (accounts) => {
 			const jwt = await createVerifiableCredentialJwt(atomicVCPayloads[c], uni, options);
 			jwtSet.push(jwt);
 		}
-		console.log("JWT number:" + jwtSet.length);
+		
 		for (let j = 0; j <config.atomic.iterations; j++) {
 			let start = performance.now();
 			for (let c = 0; c <jwtSet.length; c++) {

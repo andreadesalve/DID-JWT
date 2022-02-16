@@ -46,7 +46,7 @@ Tha supported hash functions depends on available digest algorithms of the OpenS
 
 ### Prerequisites
 
-This software is written in Javascript and in can be runned using node.js 14. DIDs used in this project belong to the [`did:ethr`](https://github.com/uport-project/ethr-did) method and the can resolved using [ethr-did-resolver](https://github.com/decentralized-identity/ethr-did-resolver) and [ethr-did-registry](https://github.com/uport-project/ethr-did-registry).
+This software is written in Javascript and in can be runned using node.js 17. DIDs used in this project belong to the [`did:ethr`](https://github.com/uport-project/ethr-did) method and the can resolved using [ethr-did-resolver](https://github.com/decentralized-identity/ethr-did-resolver) and [ethr-did-registry](https://github.com/uport-project/ethr-did-registry).
 
 ### Installation
 

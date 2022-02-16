@@ -130,7 +130,7 @@ const test = async (accounts) => {
   		    res = res + createVCtime;
   		    //console.log(signedVC.time);
   		}
-  		vcCreationTimes.push([res/config.hash.iterations,jwtSize/config.hash.iterations]);
+  		vcCreationTimes.push([res/config.atomic.iterations,jwtSize/config.atomic.iterations]);
   	}
 	
 	console.log(vcCreationTimes);
